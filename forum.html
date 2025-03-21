@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Forum for NEET Students</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #6a1b9a;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-family: 'Georgia', serif;
+        }
+
+        .forum-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-login, .new-topic {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: #6a1b9a;
+        }
+
+        select, textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: #6a1b9a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #8e24aa;
+        }
+
+        .topic {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f5f5f5;
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .footer-links a {
+            background: #6a1b9a;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 0 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Welcome to PATIL BOYS HOSTEL</h1>
+    </header>
+
+    <!-- Forum Container -->
+    <div class="forum-container">
+        <!-- Admin Login -->
+        <div class="admin-login">
+            <h2>Admin Login</h2>
+            <input type="password" id="admin-password" placeholder="Enter admin password">
+            <button onclick="adminLogin()">Login</button>
+        </div>
+
+        <!-- Post New Topic -->
+        <div class="new-topic">
+            <h2>Post a New Topic</h2>
+            <select id="category-select">
+                <option value="General">General</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Biology">Biology</option>
+                <option value="Mathematics">Mathematics</option>
+            </select>
+            <textarea id="topic-text" placeholder="Write your topic here..."></textarea>
+            <button onclick="postTopic()">Post Topic</button>
+        </div>
+
+        <!-- Topics Section -->
+        <div id="topics">
+            <h2>Topics</h2>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="footer-links">
+            <a href="index.html">Back to Home</a>
+            <a href="countdown.html">NEET Countdown</a>
+        </div>
+    </div>
+
+    <script>
+        const topicsContainer = document.getElementById('topics');
+        let isAdmin = false;
+
+        function adminLogin() {
+            const password = document.getElementById('admin-password').value;
+            if (password === 'Vishu@123') {
+                alert('Admin privileges granted!');
+                isAdmin = true;
+                renderTopics(); // Re-render topics to show delete buttons
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+
+        function postTopic() {
+            const category = document.getElementById('category-select').value;
+            const text = document.getElementById('topic-text').value.trim();
+
+            if (!text) {
+                alert('Please enter a topic!');
+                return;
+            }
+
+            const topicId = Date.now().toString();
+            const topicData = { id: topicId, category, text, replies: [] };
+            saveTopic(topicData);
+            renderTopics();
+            document.getElementById('topic-text').value = '';
+        }
+
+        function postReply(topicId) {
+            const replyText = document.getElementById(`reply-text-${topicId}`).value.trim();
+            if (!replyText) {
+                alert('Please enter a reply!');
+                return;
+            }
+
+            const topics = getTopics();
+            const topic = topics.find(t => t.id === topicId);
+            topic.replies.push(replyText);
+            saveTopics(topics);
+            renderTopics();
+        }
+
+        function deleteTopic(topicId) {
+            if (!isAdmin) return;
+
+            const topics = getTopics().filter(t => t.id !== topicId);
+            saveTopics(topics);
+            renderTopics();
+        }
+
+        function deleteReply(topicId, replyIndex) {
+            if (!isAdmin) return;
+
+            const topics = getTopics();
+            const topic = topics.find(t => t.id === topicId);
+            topic.replies.splice(replyIndex, 1);
+            saveTopics(topics);
+            renderTopics();
+        }
+
+        function getTopics() {
+            return JSON.parse(localStorage.getItem('topics') || '[]');
+        }
+
+        function saveTopics(topics) {
+            localStorage.setItem('topics', JSON.stringify(topics));
+        }
+
+        function saveTopic(topic) {
+            const topics = getTopics();
+            topics.push(topic);
+            saveTopics(topics);
+        }
+
+        function renderTopics() {
+            const topics = getTopics();
+            topicsContainer.innerHTML = topics.map(topic => `
+                <div class="topic">
+                    <h4>${topic.category} - ${topic.text}</h4>
+                    ${isAdmin ? `<button onclick="deleteTopic('${topic.id}')">Delete Topic</button>` : ''}
+                    <div>
+                        <textarea id="reply-text-${topic.id}" placeholder="Write your reply here..."></textarea>
+                        <button onclick="postReply('${topic.id}')">Post Reply</button>
+                    </div>
+                    <div>
+                        ${topic.replies.map((reply, index) => `
+                            <p>${reply} ${isAdmin ? `<button onclick="deleteReply('${topic.id}', ${index})">Delete</button>` : ''}</p>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderTopics);
+    </script>
+</body>
+</html>

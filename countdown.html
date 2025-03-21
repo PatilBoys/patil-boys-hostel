@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET Countdown Timer</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: #fff;
+        }
+        .timer {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .timer h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .countdown {
+            font-size: 1.8rem;
+            color: #00ff99;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ff6b6b;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .back-btn:hover {
+            background: #ee5253;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer">
+        <h1>Time Left for NEET Exam</h1>
+        <div class="countdown" id="countdown">Loading...</div>
+        <a href="index.html" class="back-btn">Back to Home</a>
+    </div>
+
+    <script>
+        const countdownElement = document.getElementById('countdown');
+
+        // Set the NEET exam date (adjust the date as needed)
+        const examDate = new Date('2025-05-04T09:00:00');
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeDifference = examDate - now;
+
+            if (timeDifference <= 0) {
+                countdownElement.textContent = "The NEET exam has started!";
+                clearInterval(interval);
+                return;
+            }
+
+            const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+            countdownElement.textContent = `${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
+        }
+
+        const interval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
