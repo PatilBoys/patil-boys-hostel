@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/jsrsasign"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discussion Forum for NEET Students</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>NEET Students Discussion Forum</title>
     <style>
         /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
@@ -24,7 +24,36 @@
         header h1 {
             margin: 0;
             font-size: 2rem;
-            font-family: 'Georgia', serif;
+        }
+
+        header h1 span {
+            font-size: 0.8rem;
+        }
+
+        #visitor-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #8e24aa, #6a1b9a);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: pulse 1.5s infinite;
+            z-index: 1000;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            }
         }
 
         .forum-container {
@@ -36,20 +65,18 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .admin-login, .new-topic {
-            margin-bottom: 2rem;
-        }
-
-        h2 {
-            color: #6a1b9a;
-        }
-
-        select, textarea, input {
+        textarea, select {
             width: 100%;
             padding: 10px;
             margin-bottom: 1rem;
             border: 1px solid #ddd;
             border-radius: 8px;
+            resize: none;
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: #6a1b9a;
         }
 
         button {
@@ -93,30 +120,38 @@
 <body>
     <!-- Header Section -->
     <header>
-        <h1>Welcome to PATIL BOYS HOSTEL</h1>
+        <h1>NEET Students Discussion Forum <span>(powered by Patil Boys Hostel)</span></h1>
     </header>
+
+    <!-- Visitor Counter -->
+    <div id="visitor-counter">
+        Visitors: <span id="visitor-count">0</span>
+    </div>
 
     <!-- Forum Container -->
     <div class="forum-container">
         <!-- Admin Login -->
         <div class="admin-login">
-            <h2>Admin Login</h2>
-            <input type="password" id="admin-password" placeholder="Enter admin password">
-            <button onclick="adminLogin()">Login</button>
+            <button id="show-admin-login-btn">Admin Login</button>
+            <div id="admin-login-form" style="display: none;">
+                <input type="email" id="admin-email" placeholder="Enter admin email">
+                <input type="password" id="admin-password" placeholder="Enter admin password">
+                <button id="admin-login-btn">Login</button>
+            </div>
         </div>
 
         <!-- Post New Topic -->
         <div class="new-topic">
             <h2>Post a New Topic</h2>
-            <select id="category-select">
+            <select id="topic-category">
                 <option value="General">General</option>
                 <option value="Physics">Physics</option>
                 <option value="Chemistry">Chemistry</option>
                 <option value="Biology">Biology</option>
                 <option value="Mathematics">Mathematics</option>
             </select>
-            <textarea id="topic-text" placeholder="Write your topic here..."></textarea>
-            <button onclick="postTopic()">Post Topic</button>
+            <textarea id="topic-content" placeholder="Write your topic here..."></textarea>
+            <button id="post-topic-btn">Post Topic</button>
         </div>
 
         <!-- Topics Section -->
@@ -131,103 +166,102 @@
         </div>
     </div>
 
-    <script>
-        const topicsContainer = document.getElementById('topics');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDW61lbc8uDu9nKwi9Lo5nmvZr9osr5MBY",
+            authDomain: "patil-boys-forum.firebaseapp.com",
+            projectId: "patil-boys-forum",
+            storageBucket: "patil-boys-forum.appspot.com",
+            messagingSenderId: "884346512770",
+            appId: "1:884346512770:web:863a2847c49dfc4e635b9b",
+            measurementId: "G-F6LE1SS08C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         let isAdmin = false;
 
-        function adminLogin() {
-            const password = document.getElementById('admin-password').value;
-            if (password === 'Vishu@123') {
-                alert('Admin privileges granted!');
+        const visitorCountElement = document.getElementById('visitor-count');
+        const showAdminLoginButton = document.getElementById('show-admin-login-btn');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const adminEmailInput = document.getElementById('admin-email');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const adminLoginButton = document.getElementById('admin-login-btn');
+        const topicCategorySelect = document.getElementById('topic-category');
+        const topicContentInput = document.getElementById('topic-content');
+        const postTopicButton = document.getElementById('post-topic-btn');
+        const topicsContainer = document.getElementById('topics');
+
+        showAdminLoginButton.addEventListener('click', () => {
+            adminLoginForm.style.display = 'block';
+            showAdminLoginButton.style.display = 'none';
+        });
+
+        adminLoginButton.addEventListener('click', async () => {
+            const email = adminEmailInput.value.trim();
+            const password = adminPasswordInput.value.trim();
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
                 isAdmin = true;
-                renderTopics(); // Re-render topics to show delete buttons
-            } else {
-                alert('Incorrect password!');
+                alert("Admin privileges granted!");
+                fetchTopics();
+            } catch (error) {
+                console.error("Login failed:", error);
+                alert("Invalid credentials. Please try again.");
+            }
+        });
+
+        async function fetchTopics() {
+            const topicsCollection = collection(db, "topics");
+            onSnapshot(topicsCollection, (snapshot) => {
+                topicsContainer.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const topicElement = document.createElement("div");
+                    topicElement.classList.add("topic");
+                    topicElement.innerHTML = `
+                        <h3>${data.category} - ${data.content}</h3>
+                        <textarea placeholder="Write a reply..."></textarea>
+                        <button onclick="postReply('${doc.id}', this.previousElementSibling.value)">Post Reply</button>
+                        <div class="reply">
+                            ${data.replies?.map((reply, index) => `
+                                <p>Answer ${index + 1}: ${reply} ${isAdmin ? `<button onclick="deleteReply('${doc.id}', ${index})">Delete</button>` : ""}</p>
+                            `).join("") || ""}
+                        </div>
+                        ${isAdmin ? `<button onclick="deleteTopic('${doc.id}')">Delete Topic</button>` : ""}
+                    `;
+                    topicsContainer.appendChild(topicElement);
+                });
+            });
+        }
+
+        async function updateVisitorCount() {
+            const visitorDocRef = doc(db, "statistics", "visitorCount");
+
+            try {
+                const visitorDoc = await getDoc(visitorDocRef);
+                if (visitorDoc.exists()) {
+                    const currentCount = visitorDoc.data().count || 0;
+                    await updateDoc(visitorDocRef, { count: currentCount + 1 });
+                    visitorCountElement.textContent = currentCount + 1;
+                } else {
+                    await setDoc(visitorDocRef, { count: 1 });
+                    visitorCountElement.textContent = 1;
+                }
+            } catch (error) {
+                console.error("Error updating visitor count:", error);
             }
         }
 
-        function postTopic() {
-            const category = document.getElementById('category-select').value;
-            const text = document.getElementById('topic-text').value.trim();
-
-            if (!text) {
-                alert('Please enter a topic!');
-                return;
-            }
-
-            const topicId = Date.now().toString();
-            const topicData = { id: topicId, category, text, replies: [] };
-            saveTopic(topicData);
-            renderTopics();
-            document.getElementById('topic-text').value = '';
-        }
-
-        function postReply(topicId) {
-            const replyText = document.getElementById(`reply-text-${topicId}`).value.trim();
-            if (!replyText) {
-                alert('Please enter a reply!');
-                return;
-            }
-
-            const topics = getTopics();
-            const topic = topics.find(t => t.id === topicId);
-            topic.replies.push(replyText);
-            saveTopics(topics);
-            renderTopics();
-        }
-
-        function deleteTopic(topicId) {
-            if (!isAdmin) return;
-
-            const topics = getTopics().filter(t => t.id !== topicId);
-            saveTopics(topics);
-            renderTopics();
-        }
-
-        function deleteReply(topicId, replyIndex) {
-            if (!isAdmin) return;
-
-            const topics = getTopics();
-            const topic = topics.find(t => t.id === topicId);
-            topic.replies.splice(replyIndex, 1);
-            saveTopics(topics);
-            renderTopics();
-        }
-
-        function getTopics() {
-            return JSON.parse(localStorage.getItem('topics') || '[]');
-        }
-
-        function saveTopics(topics) {
-            localStorage.setItem('topics', JSON.stringify(topics));
-        }
-
-        function saveTopic(topic) {
-            const topics = getTopics();
-            topics.push(topic);
-            saveTopics(topics);
-        }
-
-        function renderTopics() {
-            const topics = getTopics();
-            topicsContainer.innerHTML = topics.map(topic => `
-                <div class="topic">
-                    <h4>${topic.category} - ${topic.text}</h4>
-                    ${isAdmin ? `<button onclick="deleteTopic('${topic.id}')">Delete Topic</button>` : ''}
-                    <div>
-                        <textarea id="reply-text-${topic.id}" placeholder="Write your reply here..."></textarea>
-                        <button onclick="postReply('${topic.id}')">Post Reply</button>
-                    </div>
-                    <div>
-                        ${topic.replies.map((reply, index) => `
-                            <p>${reply} ${isAdmin ? `<button onclick="deleteReply('${topic.id}', ${index})">Delete</button>` : ''}</p>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        document.addEventListener('DOMContentLoaded', renderTopics);
+        updateVisitorCount();
+        fetchTopics();
     </script>
 </body>
 </html>
