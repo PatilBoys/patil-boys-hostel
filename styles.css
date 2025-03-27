@@ -13,6 +13,16 @@ body {
   min-height: 100vh;
   background-color: #f9f9f9;
 }
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.handwritten-text {
+  font-family: 'Pacifico', cursive; /* Handwritten-style font */
+  font-size: 1.0rem; /* Slightly larger text */
+  color: #4a4a4a; /* Gentle dark gray for better readability */
+  margin-bottom: 10px;
+  text-align: center; /* Center-align the text */
+}
 
 /* Header */
 header {
@@ -157,6 +167,23 @@ iframe {
 .whatsapp-button:active {
   transform: translateY(0); /* Press effect */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Reduce shadow on click */
+}
+.about-highlights ul {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.about-highlights li {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.about-highlights li i {
+  margin-right: 10px;
+  color: #4CAF50;
+  font-size: 1.2rem;
 }
 
 /* Footer */
