@@ -10,7 +10,7 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // Form Submission Script
-const apiUrl = "https://script.google.com/macros/s/AKfycbwLX-J5aLeSwNWrPvsIT8C9SNgvR0mg3CyEZDFJdMwAbBM8VUILjPCd56SzN-Ry8RTi2Q/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbwN0rj7ajPPkY4fHB78bd9o91Ivv7TC9jZvMLWfOd-aAIIoruI6kkZaPF-Ghs3N_vH6HA/exec";
 
 document.getElementById('admissionForm').addEventListener('submit', async function (e) {
   e.preventDefault();
