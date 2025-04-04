@@ -25,15 +25,6 @@
       }
     }
   </script>
-  <script>
-		  const menuToggle = document.getElementById("menu-toggle");
-		  const mobileMenu = document.getElementById("mobile-menu");
-
-		  menuToggle.addEventListener("click", () => {
-			mobileMenu.classList.toggle("hidden");
-  });
-</script>
-
 
   <!-- FontAwesome for Icons -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>
@@ -48,31 +39,26 @@
 <body class="font-sans bg-gray-100">
 
   <!-- HEADER -->
-  <header class="fixed top-0 left-0 w-full bg-white shadow-md py-4 px-6 z-50">
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-2xl font-bold text-gray-800 text-center md:text-left">PATIL BOYS HOSTEL</h1>
-
-    <!-- Navigation (Always Visible on Mobile) -->
-		<nav class="overflow-x-auto">
-		  <ul class="flex flex-nowrap space-x-4 text-sm sm:text-base font-medium">
-			<li><a href="parents.html" class="px-2 py-1 whitespace-nowrap hover:text-highlight">पालकांसाठी</a></li>
-			<li><a href="#facilities" class="px-2 py-1 whitespace-nowrap hover:text-highlight">Facilities</a></li>
-			<li><a href="admissions.html" class="px-2 py-1 whitespace-nowrap hover:text-highlight">Admissions</a></li>
+  <header class="fixed w-full bg-white shadow-md py-4 px-6 z-50">
+    <div class="flex justify-between items-center max-w-7xl mx-auto">
+      <h1 class="text-2xl font-bold text-gray-800">PATIL BOYS HOSTEL</h1>
+		<nav>
+		  <ul class="flex flex-col sm:flex-row sm:space-x-6 text-base font-medium text-center sm:text-left">
+			<li><a href="parents.html" class="block py-2 px-4 hover:text-highlight">पालकांसाठी</a></li>
+			<li><a href="#facilities" class="block py-2 px-4 hover:text-highlight">Facilities</a></li>
+			<li><a href="admissions.html" class="block py-2 px-4 hover:text-highlight">Admissions</a></li>
 			<li class="relative group">
-			  <a href="#" class="px-2 py-1 whitespace-nowrap hover:text-highlight">NEET</a>
-			  <ul class="absolute hidden group-hover:block bg-dropdownBg shadow-md py-2 rounded-lg mt-1">
+			  <a href="#" class="block py-2 px-4 hover:text-highlight">NEET</a>
+			  <ul class="hidden group-hover:block bg-dropdownBg shadow-md py-2 rounded-lg sm:absolute sm:left-0 sm:top-full sm:z-50 sm:w-48">
 				<li><a href="countdown.html" class="block px-4 py-2 hover:bg-dropdownHover">Countdown</a></li>
 				<li><a href="neet.pdf" target="_blank" class="block px-4 py-2 hover:bg-dropdownHover">NEET Guide PDF</a></li>
 			  </ul>
 			</li>
-			<li><a href="forum.html" class="px-2 py-1 whitespace-nowrap hover:text-highlight">Discussion Forum</a></li>
+			<li><a href="forum.html" class="block py-2 px-4 hover:text-highlight">Discussion Forum</a></li>
 		  </ul>
 		</nav>
-
-  </div>
-</header>
-
-
+    </div>
+  </header>
 
   <!-- HERO SECTION -->
   <section id="home" class="relative h-screen flex flex-col items-center justify-center text-center text-white bg-cover bg-center" style="background-image: url('images/hostel-banner1.jpeg');">
