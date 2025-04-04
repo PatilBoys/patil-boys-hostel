@@ -48,43 +48,29 @@
 <body class="font-sans bg-gray-100">
 
   <!-- HEADER -->
-  <header class="fixed w-full bg-white shadow-md py-4 px-6 z-50">
-  <div class="flex justify-between items-center max-w-7xl mx-auto">
-    <h1 class="text-2xl font-bold text-gray-800">PATIL BOYS HOSTEL</h1>
+  <header class="fixed top-0 left-0 w-full bg-white shadow-md py-4 px-6 z-50">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-800 text-center md:text-left">PATIL BOYS HOSTEL</h1>
 
-    <!-- Mobile Menu Button -->
-    <button id="menu-toggle" class="md:hidden text-2xl focus:outline-none">
-      <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Navigation -->
-    <nav id="menu" class="hidden md:flex space-x-6 text-lg font-medium">
-      <ul class="md:flex md:space-x-6 text-lg font-medium">
-        <li><a href="parents.html" class="hover:text-highlight">पालकांसाठी</a></li>
-        <li><a href="#facilities" class="hover:text-highlight">Facilities</a></li>
-        <li><a href="admissions.html" class="hover:text-highlight">Admissions</a></li>
+    <!-- Navigation (Always Visible on Mobile) -->
+    <nav>
+      <ul class="flex flex-col md:flex-row md:space-x-6 text-lg font-medium text-center md:text-left mt-2 md:mt-0">
+        <li><a href="parents.html" class="block py-2 md:py-0 hover:text-highlight">पालकांसाठी</a></li>
+        <li><a href="#facilities" class="block py-2 md:py-0 hover:text-highlight">Facilities</a></li>
+        <li><a href="admissions.html" class="block py-2 md:py-0 hover:text-highlight">Admissions</a></li>
         <li class="relative group">
-          <a href="#" class="hover:text-highlight">NEET</a>
-          <ul class="absolute left-0 hidden group-hover:block bg-dropdownBg shadow-md py-2 rounded-lg">
+          <a href="#" class="block py-2 md:py-0 hover:text-highlight">NEET</a>
+          <ul class="md:absolute md:left-0 md:hidden md:group-hover:block bg-dropdownBg shadow-md py-2 rounded-lg">
             <li><a href="countdown.html" class="block px-4 py-2 hover:bg-dropdownHover">Countdown</a></li>
             <li><a href="neet.pdf" target="_blank" class="block px-4 py-2 hover:bg-dropdownHover">NEET Guide PDF</a></li>
           </ul>
         </li>
-        <li><a href="forum.html" class="hover:text-highlight">Discussion Forum</a></li>
+        <li><a href="forum.html" class="block py-2 md:py-0 hover:text-highlight">Discussion Forum</a></li>
       </ul>
     </nav>
   </div>
-
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden flex flex-col items-center bg-white w-full py-4 space-y-4 text-lg md:hidden">
-    <a href="parents.html" class="hover:text-highlight">पालकांसाठी</a>
-    <a href="#facilities" class="hover:text-highlight">Facilities</a>
-    <a href="admissions.html" class="hover:text-highlight">Admissions</a>
-    <a href="countdown.html" class="hover:text-highlight">NEET Countdown</a>
-    <a href="neet.pdf" target="_blank" class="hover:text-highlight">NEET Guide PDF</a>
-    <a href="forum.html" class="hover:text-highlight">Discussion Forum</a>
-  </div>
 </header>
+
 
 
   <!-- HERO SECTION -->
