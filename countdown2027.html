@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Countdown 2027</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f2027, #2c5364);
+      background-size: 400% 400%;
+      animation: bgAnimation 12s ease infinite;
+      color: #ffffff;
+    }
+
+    @keyframes bgAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .timer-section {
+      margin-bottom: 30px;
+      padding: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .timer-section h1 {
+      font-size: 3rem;
+      margin-bottom: 25px;
+      color: #f9ca24;
+      text-shadow: 0 0 10px rgba(249, 202, 36, 0.8);
+    }
+
+    .countdown {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #00e676;
+      text-shadow: 0 0 10px rgba(0, 230, 118, 0.8);
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: linear-gradient(90deg, #ff6b6b, #ff9a9e);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .motivation-section {
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .motivation-section h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #ffeaa7;
+      text-shadow: 0 0 10px rgba(255, 234, 167, 0.8);
+    }
+
+    .motivation-section ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+    }
+
+    .motivation-section li {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      display: flex;
+      align-items: center;
+    }
+
+    .motivation-section li::before {
+      content: "🌟";
+      margin-right: 10px;
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="timer-section">
+      <h1>Countdown to NEET 2027</h1>
+      <div class="countdown" id="countdown">Loading...</div>
+      <a href="index.html" class="back-btn">Back to Home</a>
+    </div>
+
+    <div class="motivation-section">
+      <h2>Tips for NEET 2027 Aspirants</h2>
+      <ul>
+        <li>Your consistency today will be your confidence tomorrow.</li>
+        <li>Understand concepts — don’t just memorize.</li>
+        <li>Practice daily and review your mistakes.</li>
+        <li>Keep a healthy study–life balance.</li>
+        <li>Stay away from distractions, stay focused on your dream.</li>
+        <li>This journey will shape not just your rank, but your character.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const countdownElement = document.getElementById('countdown');
+    const examDate = new Date('2027-05-02T09:00:00');
+
+    function updateCountdown() {
+      const now = new Date();
+      const timeDiff = examDate - now;
+
+      if (timeDiff <= 0) {
+        countdownElement.textContent = "The NEET 2027 exam has started!";
+        clearInterval(interval);
+        return;
+      }
+
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      countdownElement.textContent = `${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
+    }
+
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
